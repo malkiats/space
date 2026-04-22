@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { api } from "@/lib/api";
+import { api, setToken } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -36,7 +36,8 @@ export function AuthForm({ mode }: AuthFormProps) {
       const response = await api.post("/auth/login", { email, password });
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data: { access_token: string }) => {
+      setToken(data.access_token);
       router.push("/dashboard");
     },
     onError: (error: unknown) => {
@@ -72,7 +73,8 @@ export function AuthForm({ mode }: AuthFormProps) {
       const loginResponse = await api.post("/auth/login", { email, password });
       return loginResponse.data;
     },
-    onSuccess: () => {
+    onSuccess: (data: { access_token: string }) => {
+      setToken(data.access_token);
       router.push("/dashboard");
     },
     onError: (error: unknown) => {

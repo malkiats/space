@@ -11,7 +11,7 @@ import {
   LogOut,
   Menu,
 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, clearToken } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -43,6 +43,7 @@ export function Sidebar({ collapsed, onToggle, isAdmin = false }: SidebarProps) 
     try {
       await api.post("/auth/logout");
     } finally {
+      clearToken();
       router.push("/login");
     }
   };
