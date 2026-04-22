@@ -5,9 +5,10 @@ from app.api.deps import get_current_user
 from app.core.config import settings
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import LoginRequest, Token
+from app.schemas.auth import AuthMessage, LoginRequest, Token
+from app.schemas.registration import RegistrationOtpRequest, RegistrationOtpVerify
 from app.schemas.user import UserCreate, UserResponse
-from app.services import auth_service
+from app.services import auth_service, registration_service
 from app.core.security import create_access_token
 
 router = APIRouter()
@@ -25,6 +26,37 @@ async def register(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already taken")
 
     user = await auth_service.create_user(db, user_in)
+    return user
+
+
+@router.post("/register/request-otp", response_model=AuthMessage)
+async def request_register_otp(
+    registration_in: RegistrationOtpRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """Send an OTP to start registration."""
+    try:
+        await registration_service.request_registration_otp(db, registration_in)
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+    except Exception as error:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to send verification code",
+        ) from error
+    return AuthMessage(message="Verification code sent")
+
+
+@router.post("/register/verify", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+async def verify_register_otp(
+    verification_in: RegistrationOtpVerify,
+    db: AsyncSession = Depends(get_db),
+):
+    """Verify OTP and create the user with the chosen password."""
+    try:
+        user = await registration_service.verify_registration_otp(db, verification_in)
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
     return user
 
 

@@ -13,3 +13,7 @@ class Token(BaseModel):
 
 class TokenPayload(BaseModel):
     sub: str
+
+
+class AuthMessage(BaseModel):
+    message: str

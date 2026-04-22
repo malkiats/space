@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     R2_ENDPOINT_URL: str = ""
     R2_PUBLIC_URL: str = ""
 
+    # Email / OTP
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    EMAIL_FROM: str = ""
+    ADMIN_EMAIL: str = ""
+
     class Config:
         env_file = ".env"
         case_sensitive = True
