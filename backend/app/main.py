@@ -10,7 +10,7 @@ from app.api.v1.router import api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if settings.AUTO_CREATE_TABLES:
+    if settings.AUTO_CREATE_TABLES and not settings.VERCEL:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
     yield

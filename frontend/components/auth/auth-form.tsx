@@ -26,7 +26,10 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [otpRequested, setOtpRequested] = useState(false);
 
   const loginMutation = useMutation({
     mutationFn: async () => {
@@ -43,11 +46,28 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const registerMutation = useMutation({
     mutationFn: async () => {
-      await api.post("/auth/register", {
+      await api.post("/auth/register/request-otp", {
         email,
-        password,
         username,
         full_name: fullName || null,
+      });
+      return true;
+    },
+    onSuccess: () => {
+      setOtpRequested(true);
+      setSuccess("Verification code sent to your email");
+    },
+    onError: (error: unknown) => {
+      setError(getErrorMessage(error, "Failed to register"));
+    },
+  });
+
+  const verifyOtpMutation = useMutation({
+    mutationFn: async () => {
+      await api.post("/auth/register/verify", {
+        email,
+        otp_code: otpCode,
+        password,
       });
       const loginResponse = await api.post("/auth/login", { email, password });
       return loginResponse.data;
@@ -56,22 +76,28 @@ export function AuthForm({ mode }: AuthFormProps) {
       router.push("/dashboard");
     },
     onError: (error: unknown) => {
-      setError(getErrorMessage(error, "Failed to register"));
+      setError(getErrorMessage(error, "Failed to verify code"));
     },
   });
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     if (mode === "login") {
       loginMutation.mutate();
     } else {
-      registerMutation.mutate();
+      if (otpRequested) {
+        verifyOtpMutation.mutate();
+      } else {
+        registerMutation.mutate();
+      }
     }
   };
 
-  const isPending = loginMutation.isPending || registerMutation.isPending;
+  const isPending =
+    loginMutation.isPending || registerMutation.isPending || verifyOtpMutation.isPending;
 
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
@@ -83,11 +109,13 @@ export function AuthForm({ mode }: AuthFormProps) {
             onChange={(e) => setUsername(e.target.value)}
             required
             minLength={3}
+            disabled={otpRequested}
           />
           <Input
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            disabled={otpRequested}
           />
         </>
       )}
@@ -97,24 +125,38 @@ export function AuthForm({ mode }: AuthFormProps) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        disabled={otpRequested}
       />
+      {mode === "register" && otpRequested && (
+        <Input
+          placeholder="Verification code"
+          value={otpCode}
+          onChange={(e) => setOtpCode(e.target.value)}
+          required
+          minLength={6}
+          maxLength={6}
+        />
+      )}
       <Input
         type="password"
-        placeholder="Password"
+        placeholder={mode === "register" ? "Set Password" : "Password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        required
+        required={mode === "login" || otpRequested}
         minLength={8}
       />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
+      {success && <p className="text-sm text-green-600">{success}</p>}
 
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending
           ? "Please wait..."
           : mode === "login"
           ? "Sign In"
-          : "Create Account"}
+          : otpRequested
+          ? "Verify Code & Create Account"
+          : "Send Verification Code"}
       </Button>
     </form>
   );

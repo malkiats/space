@@ -10,7 +10,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardContent>
           <h1 className="mb-2 text-2xl font-extrabold">Create Account</h1>
-          <p className="mb-6 text-sm text-slate-500">Set up your secure MySpace workspace</p>
+          <p className="mb-6 text-sm text-slate-500">Request an email verification code, then set your password</p>
           <AuthForm mode="register" />
           <p className="mt-4 text-sm text-slate-600">
             Already have an account?{" "}
