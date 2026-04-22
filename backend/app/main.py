@@ -2,17 +2,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from space.backend.app.core.config import settings
-from space.backend.app.db.session import engine
-from space.backend.app.db.base import Base
-from space.backend.app.api.v1.router import api_router
+from app.core.config import settings
+from app.db.session import engine
+from app.db.base import Base
+from app.api.v1.router import api_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create tables on startup
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    if settings.AUTO_CREATE_TABLES and not settings.VERCEL:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
     yield
 
 

@@ -3,11 +3,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from space.backend.app.api.deps import get_current_user
-from space.backend.app.db.session import get_db
-from space.backend.app.models.user import User
-from space.backend.app.schemas.file import FileRecordResponse, FileUploadResponse
-from space.backend.app.services import file_service
+from app.api.deps import get_current_user
+from app.db.session import get_db
+from app.models.user import User
+from app.schemas.file import FileRecordResponse, FileUploadResponse
+from app.services import file_service
 
 router = APIRouter()
 

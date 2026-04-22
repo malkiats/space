@@ -7,8 +7,8 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from space.backend.app.core.config import settings
-from space.backend.app.models.file import FileRecord
+from app.core.config import settings
+from app.models.file import FileRecord
 
 
 def get_r2_client():

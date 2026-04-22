@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from space.backend.app.api.deps import get_current_user
-from space.backend.app.core.config import settings
-from space.backend.app.db.session import get_db
-from space.backend.app.models.user import User
-from space.backend.app.schemas.auth import LoginRequest, Token
-from space.backend.app.schemas.user import UserCreate, UserResponse
-from space.backend.app.services import auth_service
-from space.backend.app.core.security import create_access_token
+from app.api.deps import get_current_user
+from app.core.config import settings
+from app.db.session import get_db
+from app.models.user import User
+from app.schemas.auth import LoginRequest, Token
+from app.schemas.user import UserCreate, UserResponse
+from app.services import auth_service
+from app.core.security import create_access_token
 
 router = APIRouter()
 

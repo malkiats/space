@@ -3,11 +3,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from space.backend.app.api.deps import get_current_user, get_current_admin
-from space.backend.app.db.session import get_db
-from space.backend.app.models.user import User
-from space.backend.app.schemas.user import UserResponse, UserRoleUpdate, UserUpdate
-from space.backend.app.services import user_service
+from app.api.deps import get_current_user, get_current_admin
+from app.db.session import get_db
+from app.models.user import User
+from app.schemas.user import UserResponse, UserRoleUpdate, UserUpdate
+from app.services import user_service
 
 router = APIRouter()
 

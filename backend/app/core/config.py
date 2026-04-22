@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "MySpace API"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
+    VERCEL: str = ""
+    AUTO_CREATE_TABLES: bool = True
 
     # Database
     DATABASE_URL: str

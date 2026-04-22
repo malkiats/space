@@ -3,7 +3,7 @@ from typing import Optional
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field
 
-from space.backend.app.models.user import UserRole
+from app.models.user import UserRole
 
 
 class UserBase(BaseModel):

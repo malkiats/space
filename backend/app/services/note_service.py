@@ -5,8 +5,8 @@ from sqlalchemy import select, func, or_, cast
 from sqlalchemy.dialects.postgresql import ARRAY as PG_ARRAY
 from sqlalchemy import String
 
-from space.backend.app.models.note import Note
-from space.backend.app.schemas.note import NoteCreate, NoteUpdate
+from app.models.note import Note
+from app.schemas.note import NoteCreate, NoteUpdate
 
 
 async def get_notes(

@@ -2,9 +2,9 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from space.backend.app.models.user import User
-from space.backend.app.schemas.user import UserCreate
-from space.backend.app.core.security import get_password_hash, verify_password
+from app.models.user import User
+from app.schemas.user import UserCreate
+from app.core.security import get_password_hash, verify_password
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:

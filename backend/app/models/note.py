@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.orm import relationship
 import uuid
 
-from space.backend.app.db.base import Base
+from app.db.base import Base
 
 
 class Note(Base):

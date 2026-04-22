@@ -3,8 +3,8 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from space.backend.app.models.user import User, UserRole
-from space.backend.app.schemas.user import UserUpdate
+from app.models.user import User, UserRole
+from app.schemas.user import UserUpdate
 
 
 async def get_all_users(db: AsyncSession, skip: int = 0, limit: int = 50) -> List[User]:
